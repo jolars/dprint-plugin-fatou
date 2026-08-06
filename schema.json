@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Configuration",
+  "description": "dprint-facing configuration, serialized as camelCase.\n\n`lineEnding` is stored as a `String` and parsed lazily, borrowing its JSON\nschema from [`LineEnding`] so the published `schema.json` tracks fatou's\naccepted values instead of hand-listing them.",
+  "type": "object",
+  "properties": {
+    "lineWidth": {
+      "description": "Maximum line width the layout engine targets. Defaults to dprint's\nglobal `lineWidth`, or 92 if unset.",
+      "type": "integer",
+      "format": "uint32",
+      "minimum": 0,
+      "default": 92
+    },
+    "indentWidth": {
+      "description": "Number of spaces per indentation level. Defaults to dprint's global\n`indentWidth`, or 4 if unset. Fatou always indents with spaces, so\ndprint's global `useTabs` has no effect.",
+      "type": "integer",
+      "format": "uint32",
+      "minimum": 0,
+      "default": 4
+    },
+    "lineEnding": {
+      "description": "Line-ending style for formatted output. Defaults to dprint's global\n`newLineKind`, or `auto` if unset.",
+      "$ref": "#/$defs/LineEnding",
+      "default": "auto"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "LineEnding": {
+      "description": "The character sequence the formatter emits at the end of each line.\n\nThe layout engine always builds output with `\\n` line breaks (the printer is\nthe sole authority on *where* breaks go); this only selects the byte sequence\nthose breaks render as in the final string.",
+      "oneOf": [
+        {
+          "description": "Detect the newline style per file from the first line ending in the\nsource, defaulting to `\\n` when the source has none. The default.",
+          "type": "string",
+          "const": "auto"
+        },
+        {
+          "description": "Always `\\n` (Unix).",
+          "type": "string",
+          "const": "lf"
+        },
+        {
+          "description": "Always `\\r\\n` (Windows).",
+          "type": "string",
+          "const": "crlf"
+        },
+        {
+          "description": "`\\n` on Unix, `\\r\\n` on Windows.",
+          "type": "string",
+          "const": "native"
+        }
+      ]
+    }
+  }
+}

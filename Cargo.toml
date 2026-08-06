@@ -1,0 +1,20 @@
+[package]
+name = "dprint-plugin-fatou"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/jolars/dprint-plugin-fatou"
+homepage = "https://fatou.dev"
+authors = ["Johan Larsson <johan@jolars.co>"]
+description = "dprint Wasm plugin that wraps the fatou formatter for the Julia language."
+publish = false
+
+[lib]
+crate-type = ["lib", "cdylib"]
+
+[dependencies]
+dprint-core = { version = "0.68", features = ["wasm"] }
+fatou-formatter = { version = "0.1", features = ["schema"] }
+schemars = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"

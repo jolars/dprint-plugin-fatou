@@ -1,0 +1,132 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-and-smoke:
+    name: Build & Parity Smoke Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # `rust-toolchain.toml` pins the channel, so it overrides any toolchain a
+      # setup action installs. Install straight from it instead, which brings
+      # the components and the wasm target it declares.
+      - name: Install Rust
+        run: |
+          rustup toolchain install --profile minimal
+          rustup component add rustfmt clippy
+          rustup target add wasm32-unknown-unknown
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ci-wasm
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Test (native)
+        run: cargo test
+
+      - name: Build wasm plugin
+        run: cargo build --release --target wasm32-unknown-unknown
+
+      - name: Install dprint
+        run: cargo install --locked dprint
+
+      # The plugin embeds `fatou-formatter`; the CLI is a separate binary built
+      # from the same engine. Diffing them is the only thing that catches the
+      # plugin's config mapping drifting away from `fatou format`.
+      - name: Download the fatou CLI
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TAG=$(gh release list --repo jolars/fatou --limit 50 \
+            --json tagName --jq '[.[].tagName | select(test("^v[0-9]"))][0]')
+          echo "Using fatou $TAG"
+          gh release download "$TAG" --repo jolars/fatou \
+            --pattern 'fatou-x86_64-unknown-linux-gnu.tar.gz'
+          mkdir -p cli && tar -xzf fatou-x86_64-unknown-linux-gnu.tar.gz -C cli
+          find cli -type f -name fatou -exec install -m755 {} "$RUNNER_TEMP/fatou" \;
+          "$RUNNER_TEMP/fatou" --version
+
+      - name: Parity and idempotence smoke test
+        run: |
+          set -euo pipefail
+          WORK="$RUNNER_TEMP/smoke"
+          mkdir -p "$WORK" && cd "$WORK"
+
+          cat > sample.jl <<'SAMPLE'
+          function summarize(df,by)
+          if isempty(df)
+          return nothing
+          end
+          out=df[by] .+ 1
+          result = some_function(alpha, beta, gamma, delta, epsilon, zeta, eta, theta, iota, kappa, lambda2)
+          out
+          end
+          x=1
+          SAMPLE
+
+          cat > dprint.json <<CONFIG
+          {
+            "fatou": {},
+            "plugins": ["${GITHUB_WORKSPACE}/target/wasm32-unknown-unknown/release/dprint_plugin_fatou.wasm"]
+          }
+          CONFIG
+
+          cp sample.jl via_cli.jl
+          "$RUNNER_TEMP/fatou" format via_cli.jl
+          dprint fmt
+
+          echo "::group::plugin vs CLI"
+          diff sample.jl via_cli.jl
+          echo "::endgroup::"
+
+          cp sample.jl first_pass.jl
+          dprint fmt
+          echo "::group::idempotence"
+          diff first_pass.jl sample.jl
+          echo "::endgroup::"
+
+  versionary:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build-and-smoke
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    outputs:
+      release_created: ${{ steps.versionary.outputs.release_created }}
+      tag_name: ${{ steps.versionary.outputs.tag_name }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          token: ${{ secrets.RELEASE_TOKEN }}
+
+      # See above: `rust-toolchain.toml` pins the channel, so install from it.
+      - name: Install Rust
+        run: rustup toolchain install --profile minimal
+
+      - id: versionary
+        uses: jolars/versionary@v0
+        with:
+          github-token: ${{ secrets.RELEASE_TOKEN }}
