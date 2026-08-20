@@ -70,9 +70,9 @@ checksum = "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
 
 [[package]]
 name = "fatou-formatter"
-version = "0.3.2"
+version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a8051f23b870bf3c08daa07fe0da18760abda7d18ff7604b6c521af9cf975f9f"
+checksum = "46c9181dc359efc86f57e6c3947a60a3a89ab47cf003b431017c8449a1b914e2"
 dependencies = [
  "fatou-parser",
  "rowan",
@@ -82,9 +82,9 @@ dependencies = [
 
 [[package]]
 name = "fatou-parser"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8c707bd54d6560880d70fa83b42b920d674221e1b95e4fe3f4297efb5ff11b2f"
+checksum = "0e8a373dc4526bfff1e9f09d11b21eaa74aabb08e118036dc881e3c6c401a810"
 dependencies = [
  "rowan",
  "serde",
