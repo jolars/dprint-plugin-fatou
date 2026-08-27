@@ -13,7 +13,7 @@ publish = false
 crate-type = ["lib", "cdylib"]
 
 [dependencies]
-dprint-core = { version = "0.68", features = ["wasm"] }
+dprint-core = { version = "0.69", features = ["wasm"] }
 fatou-formatter = { version = "0.4.0", features = ["schema"] }
 schemars = "1.0"
 serde = { version = "1.0", features = ["derive"] }
