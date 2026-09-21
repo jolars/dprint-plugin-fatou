@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.7.2](https://github.com/jolars/dprint-plugin-fatou/compare/v0.7.1...v0.7.2) (2026-09-21)
+
+### Bug Fixes
+- bump `fatou-formatter` to 0.7.2 (#22) ([`d3ce4b6`](https://github.com/jolars/dprint-plugin-fatou/commit/d3ce4b6d381f007c7cdf18620e155d40fc201466))
+
 ## [0.7.1](https://github.com/jolars/dprint-plugin-fatou/compare/v0.7.0...v0.7.1) (2026-09-16)
 
 ### Bug Fixes
