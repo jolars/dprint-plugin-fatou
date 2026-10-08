@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.7.4](https://github.com/jolars/dprint-plugin-fatou/compare/v0.7.3...v0.7.4) (2026-10-08)
+
+### Bug Fixes
+
+- adapt file matching to dprint-core 0.70 ([`d1ac24f`](https://github.com/jolars/dprint-plugin-fatou/commit/d1ac24fe279a4842b5f8374f460a9701bcaceea5))
+
 ## [0.7.3](https://github.com/jolars/dprint-plugin-fatou/compare/v0.7.2...v0.7.3) (2026-09-30)
 
 ### Bug Fixes
