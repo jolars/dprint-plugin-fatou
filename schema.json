@@ -22,6 +22,38 @@
       "description": "Line-ending style for formatted output. Defaults to dprint's global\n`newLineKind`, or `auto` if unset.",
       "$ref": "#/$defs/LineEnding",
       "default": "auto"
+    },
+    "associations": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ],
+      "description": "File patterns to associate with this plugin."
+    },
+    "locked": {
+      "description": "Whether this configuration may not be overridden or extended.",
+      "type": "boolean"
+    },
+    "overrides": {
+      "description": "Configuration overrides for matching files, applied in order.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/DprintOverride"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DprintOverride"
+          }
+        }
+      ]
     }
   },
   "additionalProperties": false,
@@ -50,6 +82,49 @@
           "const": "native"
         }
       ]
+    },
+    "DprintOverride": {
+      "type": "object",
+      "properties": {
+        "lineWidth": {
+          "description": "Maximum line width the layout engine targets. Defaults to dprint's\nglobal `lineWidth`, or 92 if unset.",
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0,
+          "default": 92
+        },
+        "indentWidth": {
+          "description": "Number of spaces per indentation level. Defaults to dprint's global\n`indentWidth`, or 4 if unset. Fatou always indents with spaces, so\ndprint's global `useTabs` has no effect.",
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0,
+          "default": 4
+        },
+        "lineEnding": {
+          "description": "Line-ending style for formatted output. Defaults to dprint's global\n`newLineKind`, or `auto` if unset.",
+          "$ref": "#/$defs/LineEnding",
+          "default": "auto"
+        },
+        "files": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            }
+          ]
+        }
+      },
+      "required": [
+        "files"
+      ],
+      "minProperties": 2,
+      "additionalProperties": false
     }
   }
 }
