@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.7.5](https://github.com/jolars/dprint-plugin-fatou/compare/v0.7.4...v0.7.5) (2026-10-14)
+
+### Bug Fixes
+
+- accept dprint settings in config schema ([`55ea622`](https://github.com/jolars/dprint-plugin-fatou/commit/55ea62285879e43e492ac0d589e303e851d3d70a))
+
 ## [0.7.4](https://github.com/jolars/dprint-plugin-fatou/compare/v0.7.3...v0.7.4) (2026-10-08)
 
 ### Bug Fixes
