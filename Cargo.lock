@@ -47,7 +47,7 @@ dependencies = [
 
 [[package]]
 name = "dprint-plugin-fatou"
-version = "0.7.6"
+version = "0.7.7"
 dependencies = [
  "dprint-core",
  "fatou-formatter",
