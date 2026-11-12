@@ -238,6 +238,7 @@ impl SyncPluginHandler<Configuration> for FatouHandler {
                 "https://github.com/jolars/dprint-plugin-fatou/releases/download/v{version}/schema.json"
             ),
             update_url: Some("https://plugins.dprint.dev/jolars/fatou/latest.json".to_string()),
+            supports_range_formatting: Some(true),
         }
     }
 
