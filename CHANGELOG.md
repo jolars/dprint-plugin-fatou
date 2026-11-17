@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.8.2](https://github.com/jolars/dprint-plugin-fatou/compare/v0.8.1...v0.8.2) (2026-11-17)
+
+### Bug Fixes
+
+- **deps:** upgrade `dprint-core` to 0.77.0 ([`63e0bbd`](https://github.com/jolars/dprint-plugin-fatou/commit/63e0bbd922f6fd49f3cf5c76c494ba31661ca009))
+
 ## [0.8.1](https://github.com/jolars/dprint-plugin-fatou/compare/v0.8.0...v0.8.1) (2026-11-12)
 
 ### Bug Fixes
